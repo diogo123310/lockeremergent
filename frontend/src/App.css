@@ -1,11 +1,39 @@
+/**
+ * 🎨 SISTEMA DE LUGGAGE STORAGE - ESTILOS CUSTOMIZADOS
+ * =====================================================
+ * 
+ * Este arquivo contém todos os estilos customizados para o sistema.
+ * 
+ * SEÇÕES:
+ * 📁 Configuração Base: Fonte, reset CSS
+ * 🎨 Cores e Variáveis: Paleta de cores customizada
+ * ⚡ Animações: Efeitos de transição e hover
+ * 📱 Responsividade: Media queries para mobile/tablet
+ * 🖱️ Acessibilidade: Focus, contrast, usabilidade
+ * 
+ * COMO EDITAR:
+ * - Cores: Alterar seção "Cores Customizadas"
+ * - Animações: Modificar @keyframes e transitions
+ * - Layout: Ajustar media queries para breakpoints
+ * - Fonte: Trocar import do Google Fonts
+ */
+
+/* ====================================
+   📁 CONFIGURAÇÃO BASE
+   ==================================== */
+
+/* 🔤 Importar fonte do Google Fonts 
+   🔍 EDITAR AQUI: Para trocar a fonte principal */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
+/* Configuração global da aplicação */
 .App {
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Reset CSS básico */
 * {
   box-sizing: border-box;
 }
@@ -16,7 +44,50 @@ body {
   background-color: #f8fafc;
 }
 
-/* Custom scrollbar */
+/* ====================================
+   🎨 CORES E VARIÁVEIS CUSTOMIZADAS
+   🔍 EDITAR AQUI: Para alterar paleta de cores
+   ==================================== */
+
+:root {
+  /* Cores principais do sistema */
+  --primary-blue: #3b82f6;      /* Azul dos botões e ícones principais */
+  --primary-green: #16a34a;     /* Verde para preços e sucesso */
+  --primary-red: #dc2626;       /* Vermelho para erros */
+  --primary-yellow: #eab308;    /* Amarelo para avisos */
+  
+  /* Gradientes de fundo */
+  --gradient-blue: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+  --gradient-green: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  --gradient-red: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+  
+  /* Cores de texto */
+  --text-primary: #1f2937;      /* Texto principal (cinza escuro) */
+  --text-secondary: #6b7280;    /* Texto secundário (cinza médio) */
+  --text-muted: #9ca3af;        /* Texto suave (cinza claro) */
+  
+  /* Cores de fundo */
+  --bg-card: #ffffff;           /* Fundo dos cards */
+  --bg-overlay: rgba(0, 0, 0, 0.1); /* Overlay escuro */
+  
+  /* Sombras */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  
+  /* Raios de borda */
+  --radius-sm: 0.375rem;        /* 6px */
+  --radius-md: 0.5rem;          /* 8px */
+  --radius-lg: 0.75rem;         /* 12px */
+  --radius-xl: 1rem;            /* 16px */
+}
+
+/* ====================================
+   🖱️ SCROLLBAR CUSTOMIZADA
+   ==================================== */
+
+/* Webkit browsers (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -27,27 +98,38 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
 
-/* Smooth transitions for interactive elements */
+/* ====================================
+   ⚡ ANIMAÇÕES E TRANSIÇÕES
+   🔍 EDITAR AQUI: Para customizar efeitos
+   ==================================== */
+
+/* Transições suaves para elementos interativos */
 button {
   transition: all 0.2s ease-in-out;
 }
 
+/* Efeito hover para botões - leve elevação */
 button:hover {
   transform: translateY(-1px);
 }
 
+/* Efeito active - volta à posição normal */
 button:active {
   transform: translateY(0);
 }
 
-/* Loading animation */
+/* ====================================
+   🎭 ANIMAÇÕES CUSTOMIZADAS
+   ==================================== */
+
+/* Animação de pulso para loading */
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
@@ -61,25 +143,7 @@ button:active {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Card hover effects */
-.card-hover {
-  transition: all 0.3s ease;
-}
-
-.card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-/* PIN input styling */
-input[type="text"].pin-input {
-  letter-spacing: 0.5em;
-  text-align: center;
-  font-family: 'Courier New', monospace;
-  font-weight: bold;
-}
-
-/* Success animations */
+/* Animação de entrada com bounce */
 @keyframes bounceIn {
   0% {
     opacity: 0;
@@ -102,31 +166,361 @@ input[type="text"].pin-input {
   animation: bounceIn 0.6s ease-out;
 }
 
-/* Mobile optimizations */
+/* Animação de fade in suave */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* ====================================
+   🃏 EFEITOS DE HOVER PARA CARDS
+   ==================================== */
+
+/* Efeito hover suave para cards */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* ====================================
+   🔐 ESTILOS ESPECÍFICOS PARA COMPONENTES
+   ==================================== */
+
+/* Campo de PIN - Estilo monospace com espaçamento */
+input[type="text"].pin-input {
+  letter-spacing: 0.5em;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+}
+
+/* Estilo para inputs grandes (touchscreen) */
+.input-large {
+  height: 3.5rem; /* 56px - ideal para touch */
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+/* Botões grandes para touchscreen */
+.button-large {
+  height: 3.5rem; /* 56px - mínimo recomendado para touch */
+  min-width: 3.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+/* ====================================
+   💰 ESTILOS PARA PREÇOS
+   ==================================== */
+
+/* Destaque para valores monetários */
+.price-display {
+  color: var(--primary-green);
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+/* Símbolo do Euro */
+.euro-symbol {
+  color: var(--primary-green);
+  margin-right: 0.25rem;
+}
+
+/* ====================================
+   🔢 ESTILOS PARA NÚMEROS E CÓDIGOS
+   ==================================== */
+
+/* Display para números de cacifo */
+.locker-number {
+  font-family: 'Courier New', monospace;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary-blue);
+}
+
+/* Display para códigos PIN */
+.pin-display {
+  font-family: 'Courier New', monospace;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary-green);
+  letter-spacing: 0.25em;
+}
+
+/* ====================================
+   🚨 ESTADOS DE FEEDBACK
+   ==================================== */
+
+/* Estilo para mensagens de sucesso */
+.success-message {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  border: 2px solid #16a34a;
+  color: #166534;
+  padding: 1rem;
+  border-radius: var(--radius-lg);
+}
+
+/* Estilo para mensagens de erro */
+.error-message {
+  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+  border: 2px solid #dc2626;
+  color: #991b1b;
+  padding: 1rem;
+  border-radius: var(--radius-lg);
+}
+
+/* Estilo para avisos */
+.warning-message {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 2px solid #eab308;
+  color: #92400e;
+  padding: 1rem;
+  border-radius: var(--radius-lg);
+}
+
+/* ====================================
+   📱 RESPONSIVIDADE - MOBILE FIRST
+   🔍 EDITAR AQUI: Para ajustar breakpoints
+   ==================================== */
+
+/* Mobile devices (até 767px) */
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
   }
   
+  /* Títulos menores em mobile */
   .text-4xl {
-    font-size: 2.5rem;
+    font-size: 2rem; /* 32px */
   }
   
   .text-3xl {
-    font-size: 2rem;
+    font-size: 1.75rem; /* 28px */
+  }
+  
+  .text-2xl {
+    font-size: 1.5rem; /* 24px */
+  }
+  
+  /* Botões mais altos para touch */
+  .mobile-button {
+    height: 4rem; /* 64px */
+    font-size: 1.125rem;
+  }
+  
+  /* Cards em coluna única */
+  .mobile-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  /* Inputs maiores para mobile */
+  .mobile-input {
+    height: 4rem;
+    font-size: 1.25rem;
   }
 }
 
-/* Focus styles for accessibility */
+/* Tablet devices (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* Layout de 2 colunas para tablets */
+  .tablet-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* Desktop devices (1024px+) */
+@media (min-width: 1024px) {
+  /* Layout de 3 colunas para desktop */
+  .desktop-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  
+  /* Hover effects apenas em desktop */
+  .desktop-hover:hover {
+    transform: translateY(-2px);
+    transition: transform 0.3s ease;
+  }
+}
+
+/* ====================================
+   ♿ ACESSIBILIDADE
+   ==================================== */
+
+/* Estilos de foco visíveis */
 button:focus,
-input:focus {
-  outline: 2px solid #3b82f6;
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Remover outline padrão do browser */
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--primary-blue);
   outline-offset: 2px;
 }
 
-/* Print styles */
+/* Alto contraste para texto */
+.high-contrast {
+  color: #000000;
+  background-color: #ffffff;
+}
+
+/* Texto apenas para screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ====================================
+   🖨️ ESTILOS PARA IMPRESSÃO
+   ==================================== */
+
 @media print {
+  /* Ocultar elementos não essenciais na impressão */
   .no-print {
-    display: none;
+    display: none !important;
+  }
+  
+  /* Fundo branco para impressão */
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* Remover sombras na impressão */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
   }
 }
+
+/* ====================================
+   🌙 MODO ESCURO (OPCIONAL)
+   🔍 EDITAR AQUI: Para implementar dark mode
+   ==================================== */
+
+/* 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --bg-card: #1f2937;
+    --bg-primary: #111827;
+  }
+  
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+  }
+}
+*/
+
+/* ====================================
+   💡 UTILITIES CUSTOMIZADAS
+   ==================================== */
+
+/* Centralizar absolutamente */
+.center-absolute {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Texto com gradiente */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-green) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Blur backdrop para modais */
+.backdrop-blur {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ====================================
+   📏 ESPAÇAMENTOS CUSTOMIZADOS
+   ==================================== */
+
+/* Espaçamentos específicos para touchscreen */
+.touch-spacing {
+  padding: 1.5rem; /* 24px - espaçamento confortável para touch */
+}
+
+.touch-margin {
+  margin: 1rem; /* 16px */
+}
+
+/* Espaçamento entre elementos de formulário */
+.form-spacing > * + * {
+  margin-top: 1.5rem;
+}
+
+/* ====================================
+   🔚 FIM DOS ESTILOS
+   ==================================== */
+
+/**
+ * 💡 DICAS PARA CUSTOMIZAÇÃO:
+ * 
+ * 🎨 CORES:
+ * - Altere as variáveis CSS em :root
+ * - Use var(--nome-variavel) para aplicar
+ * - Teste contraste em https://contrast-ratio.com/
+ * 
+ * ⚡ ANIMAÇÕES:
+ * - Modifique @keyframes para novos efeitos
+ * - Ajuste durations (0.2s, 0.3s, etc.)
+ * - Use ease-in-out para suavidade
+ * 
+ * 📱 RESPONSIVIDADE:
+ * - Mobile: max-width: 768px
+ * - Tablet: 768px - 1023px  
+ * - Desktop: min-width: 1024px
+ * - Touch targets: mínimo 44px (3rem)
+ * 
+ * 🔧 PERFORMANCE:
+ * - Use transform para animações (GPU acceleration)
+ * - Evite animar width/height (use scale)
+ * - Prefira opacity over visibility
+ * 
+ * ♿ ACESSIBILIDADE:
+ * - Contraste mínimo 4.5:1 para texto
+ * - Focus visível em todos elementos interativos
+ * - Tamanhos mínimos para touch (44px)
+ * - Suporte a screen readers
+ */

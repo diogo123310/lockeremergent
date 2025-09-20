@@ -1,31 +1,67 @@
+/**
+ * 🏪 SISTEMA DE LUGGAGE STORAGE AUTOMÁTICO - FRONTEND REACT
+ * ========================================================= 
+ * 
+ * Este arquivo contém toda a interface do usuário para o sistema de cacifos.
+ * 
+ * ESTRUTURA:
+ * 🏠 LockerSelection: Página inicial com seleção de cacifos
+ * ✅ PaymentSuccess: Página após pagamento aprovado (mostra PIN)
+ * 🔓 UnlockTerminal: Terminal para desbloquear cacifo com PIN
+ * ❌ PaymentCancelled: Página quando pagamento é cancelado
+ * 
+ * COMO EDITAR:
+ * - Cores/Design: Alterar variáveis CSS em App.css
+ * - Preços: São puxados automaticamente da API
+ * - Textos: Buscar por strings em português para alterar
+ * - Componentes: Usar shadcn/ui em /components/ui/
+ */
+
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route, useSearchParams, useLocation } from "react-router-dom";
 import axios from "axios";
+
+// Importação dos componentes shadcn/ui
 import { Button } from "./components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/card";
 import { Badge } from "./components/ui/badge";
 import { Input } from "./components/ui/input";
 import { Label } from "./components/ui/label";
-import { AlertCircle, Lock, Package, Check, Clock, Euro } from "lucide-react";
 import { Alert, AlertDescription } from "./components/ui/alert";
 import { useToast } from "./hooks/use-toast";
 import { Toaster } from "./components/ui/toaster";
 
+// Importação dos ícones Lucide React
+import { AlertCircle, Lock, Package, Check, Clock, Euro } from "lucide-react";
+
+// ====================================
+// 🔧 CONFIGURAÇÃO DA API
+// ====================================
+
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+// ====================================
+// 🏠 PÁGINA INICIAL - SELEÇÃO DE CACIFOS
+// ====================================
+
 const LockerSelection = () => {
+  // Estados do componente
   const [availability, setAvailability] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState(null);
   const [isRenting, setIsRenting] = useState(false);
   const { toast } = useToast();
 
+  // Carregar disponibilidade ao montar componente
   useEffect(() => {
     fetchAvailability();
   }, []);
 
+  /**
+   * 📊 Buscar disponibilidade de cacifos na API
+   */
   const fetchAvailability = async () => {
     try {
       const response = await axios.get(`${API}/lockers/availability`);
@@ -42,6 +78,10 @@ const LockerSelection = () => {
     }
   };
 
+  /**
+   * 🔤 Converter tamanho do cacifo para português
+   * 🔍 EDITAR AQUI: Para alterar nomes dos tamanhos
+   */
   const getSizeDisplayName = (size) => {
     const names = {
       small: "Pequeno",
@@ -51,12 +91,19 @@ const LockerSelection = () => {
     return names[size] || size;
   };
 
+  /**
+   * 📦 Obter emoji para cada tamanho de cacifo
+   * 🔍 EDITAR AQUI: Para alterar ícones dos cacifos
+   */
   const getSizeIcon = (size) => {
     if (size === "small") return "📦";
     if (size === "medium") return "📋";
     return "🧳";
   };
 
+  /**
+   * 💰 Processar aluguel de cacifo
+   */
   const handleRent = async (size) => {
     if (isRenting) return;
     
@@ -64,11 +111,12 @@ const LockerSelection = () => {
     setSelectedSize(size);
 
     try {
+      // Criar aluguel via API
       const response = await axios.post(`${API}/rentals`, {
         locker_size: size
       });
 
-      // Redirect to Stripe checkout
+      // Redirecionar para checkout do Stripe
       window.location.href = response.data.checkout_url;
     } catch (error) {
       console.error("Error creating rental:", error);
@@ -82,6 +130,7 @@ const LockerSelection = () => {
     }
   };
 
+  // Tela de carregamento
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
@@ -96,7 +145,11 @@ const LockerSelection = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+        
+        {/* ====================================
+            🎨 CABEÇALHO DA PÁGINA
+            🔍 EDITAR AQUI: Para alterar título e descrição
+            ==================================== */}
         <div className="text-center mb-12 pt-8">
           <div className="flex items-center justify-center mb-6">
             <div className="bg-blue-600 p-4 rounded-full mr-4">
@@ -109,7 +162,10 @@ const LockerSelection = () => {
           </p>
         </div>
 
-        {/* Locker Selection */}
+        {/* ====================================
+            🏪 CARDS DE SELEÇÃO DE CACIFOS
+            🔍 EDITAR AQUI: Para alterar layout dos cards
+            ==================================== */}
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           {availability.map((locker) => (
             <Card 
@@ -126,6 +182,7 @@ const LockerSelection = () => {
                   Cacifo {getSizeDisplayName(locker.size)}
                 </CardTitle>
                 <CardDescription className="text-lg">
+                  {/* Exibição do preço */}
                   <div className="flex items-center justify-center mt-2">
                     <Euro className="w-5 h-5 mr-1 text-green-600" />
                     <span className="text-2xl font-bold text-green-600">
@@ -137,6 +194,7 @@ const LockerSelection = () => {
               </CardHeader>
               
               <CardContent className="text-center">
+                {/* Badge de disponibilidade */}
                 <div className="mb-6">
                   <Badge 
                     variant={locker.available_count > 0 ? "default" : "destructive"}
@@ -146,6 +204,7 @@ const LockerSelection = () => {
                   </Badge>
                 </div>
                 
+                {/* Botão de aluguel */}
                 <Button 
                   onClick={() => handleRent(locker.size)}
                   disabled={locker.available_count === 0 || isRenting}
@@ -170,7 +229,10 @@ const LockerSelection = () => {
           ))}
         </div>
 
-        {/* Features */}
+        {/* ====================================
+            📋 SEÇÃO "COMO FUNCIONA"
+            🔍 EDITAR AQUI: Para alterar passos do processo
+            ==================================== */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
           <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Como Funciona</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -202,6 +264,10 @@ const LockerSelection = () => {
   );
 };
 
+// ====================================
+// ✅ PÁGINA DE SUCESSO - PAGAMENTO APROVADO
+// ====================================
+
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const [paymentData, setPaymentData] = useState(null);
@@ -215,6 +281,12 @@ const PaymentSuccess = () => {
     }
   }, [searchParams]);
 
+  /**
+   * 🔍 Verificar status do pagamento via polling
+   * 
+   * Faz chamadas repetidas à API até o pagamento ser confirmado.
+   * Importante porque o Stripe pode demorar alguns segundos para processar.
+   */
   const checkPaymentStatus = async (sessionId, attempts = 0) => {
     const maxAttempts = 10;
     
@@ -232,10 +304,11 @@ const PaymentSuccess = () => {
       const response = await axios.get(`${API}/payments/status/${sessionId}`);
       
       if (response.data.payment_status === 'paid') {
+        // Pagamento confirmado!
         setPaymentData(response.data);
         setLoading(false);
       } else {
-        // Continue polling
+        // Continuar verificando
         setTimeout(() => checkPaymentStatus(sessionId, attempts + 1), 2000);
       }
     } catch (error) {
@@ -253,6 +326,7 @@ const PaymentSuccess = () => {
     }
   };
 
+  // Tela de carregamento
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center">
@@ -264,6 +338,7 @@ const PaymentSuccess = () => {
     );
   }
 
+  // Erro no pagamento
   if (!paymentData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-rose-100 flex items-center justify-center">
@@ -282,6 +357,7 @@ const PaymentSuccess = () => {
     );
   }
 
+  // Sucesso - Mostrar dados do cacifo e PIN
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
       <Card className="max-w-2xl mx-auto shadow-2xl">
@@ -298,6 +374,10 @@ const PaymentSuccess = () => {
         </CardHeader>
         
         <CardContent className="space-y-6">
+          {/* ====================================
+              🎯 DADOS DE ACESSO - DESTAQUE PRINCIPAL
+              🔍 EDITAR AQUI: Para alterar layout dos dados
+              ==================================== */}
           <div className="bg-green-50 p-6 rounded-lg border-2 border-green-200">
             <h3 className="text-xl font-bold text-center mb-4">Seus Dados de Acesso</h3>
             
@@ -316,6 +396,7 @@ const PaymentSuccess = () => {
               </div>
             </div>
             
+            {/* Aviso de expiração */}
             <Alert className="bg-yellow-50 border-yellow-200">
               <Clock className="w-4 h-4" />
               <AlertDescription>
@@ -325,6 +406,7 @@ const PaymentSuccess = () => {
             </Alert>
           </div>
           
+          {/* Botão para ir ao terminal */}
           <div className="text-center space-y-4">
             <p className="text-gray-600">
               Use o número do cacifo e o código PIN no terminal para abrir seu cacifo.
@@ -343,6 +425,10 @@ const PaymentSuccess = () => {
   );
 };
 
+// ====================================
+// 🔓 TERMINAL DE DESBLOQUEIO
+// ====================================
+
 const UnlockTerminal = () => {
   const [lockerNumber, setLockerNumber] = useState('');
   const [accessPin, setAccessPin] = useState('');
@@ -350,9 +436,13 @@ const UnlockTerminal = () => {
   const [result, setResult] = useState(null);
   const { toast } = useToast();
 
+  /**
+   * 🔐 Processar desbloqueio do cacifo
+   */
   const handleUnlock = async (e) => {
     e.preventDefault();
     
+    // Validar dados
     if (!lockerNumber || !accessPin) {
       toast({
         title: "Erro",
@@ -384,6 +474,9 @@ const UnlockTerminal = () => {
     }
   };
 
+  /**
+   * 🔄 Resetar formulário para nova tentativa
+   */
   const resetForm = () => {
     setLockerNumber('');
     setAccessPin('');
@@ -407,8 +500,12 @@ const UnlockTerminal = () => {
         
         <CardContent>
           {result ? (
+            /* ====================================
+               📊 RESULTADO DO DESBLOQUEIO
+               ==================================== */
             <div className="text-center space-y-4">
               {result.success ? (
+                /* ✅ Sucesso - Cacifo desbloqueado */
                 <div className="space-y-4">
                   <div className="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
                     <Check className="w-8 h-8 text-white" />
@@ -424,6 +521,7 @@ const UnlockTerminal = () => {
                   </p>
                 </div>
               ) : (
+                /* ❌ Erro - Acesso negado */
                 <div className="space-y-4">
                   <div className="bg-red-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
                     <AlertCircle className="w-8 h-8 text-white" />
@@ -445,7 +543,12 @@ const UnlockTerminal = () => {
               </Button>
             </div>
           ) : (
+            /* ====================================
+               📝 FORMULÁRIO DE DESBLOQUEIO
+               🔍 EDITAR AQUI: Para alterar campos do formulário
+               ==================================== */
             <form onSubmit={handleUnlock} className="space-y-6">
+              {/* Campo: Número do Cacifo */}
               <div>
                 <Label htmlFor="lockerNumber" className="text-sm font-medium">
                   Número do Cacifo
@@ -462,6 +565,7 @@ const UnlockTerminal = () => {
                 />
               </div>
               
+              {/* Campo: Código PIN */}
               <div>
                 <Label htmlFor="accessPin" className="text-sm font-medium">
                   Código PIN
@@ -477,6 +581,7 @@ const UnlockTerminal = () => {
                 />
               </div>
               
+              {/* Botão de desbloqueio */}
               <Button 
                 type="submit"
                 disabled={isUnlocking}
@@ -501,6 +606,10 @@ const UnlockTerminal = () => {
     </div>
   );
 };
+
+// ====================================
+// ❌ PÁGINA DE CANCELAMENTO DE PAGAMENTO  
+// ====================================
 
 const PaymentCancelled = () => {
   return (
@@ -531,20 +640,70 @@ const PaymentCancelled = () => {
   );
 };
 
+// ====================================
+// 🌐 APLICAÇÃO PRINCIPAL - ROTEAMENTO
+// ====================================
+
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
+          {/* 🏠 Página inicial - Seleção de cacifos */}
           <Route path="/" element={<LockerSelection />} />
+          
+          {/* ✅ Sucesso no pagamento */}
           <Route path="/payment-success" element={<PaymentSuccess />} />
+          
+          {/* ❌ Cancelamento do pagamento */}
           <Route path="/payment-cancelled" element={<PaymentCancelled />} />
+          
+          {/* 🔓 Terminal de desbloqueio */}
           <Route path="/unlock" element={<UnlockTerminal />} />
         </Routes>
       </BrowserRouter>
+      
+      {/* Sistema de notificações toast */}
       <Toaster />
     </div>
   );
 }
 
 export default App;
+
+/**
+ * ====================================
+ * 💡 DICAS PARA EDIÇÃO
+ * ====================================
+ * 
+ * 🎨 DESIGN E CORES:
+ * - Altere cores principais em App.css
+ * - Modifique gradientes nas classes bg-gradient-to-*
+ * - Customize componentes shadcn/ui em /components/ui/
+ * 
+ * 📝 TEXTOS E IDIOMA:
+ * - Busque por strings em português para alterar textos
+ * - Função getSizeDisplayName() para nomes dos tamanhos
+ * - Messages de erro e sucesso nos toast()
+ * 
+ * 🔧 FUNCIONALIDADES:
+ * - handleRent(): Lógica de aluguel
+ * - checkPaymentStatus(): Polling de pagamento
+ * - handleUnlock(): Desbloqueio de cacifo
+ * 
+ * 📱 RESPONSIVIDADE:
+ * - Classes grid md:grid-cols-* para layout responsivo  
+ * - Breakpoints: sm, md, lg, xl
+ * - Touchscreen: botões com h-14 (altura 56px)
+ * 
+ * 🔌 API:
+ * - Constante API para endpoint base
+ * - axios para chamadas HTTP
+ * - Tratamento de erros com try/catch
+ * 
+ * 📚 DOCUMENTAÇÃO:
+ * - React Router: https://reactrouter.com/
+ * - shadcn/ui: https://ui.shadcn.com/
+ * - Tailwind CSS: https://tailwindcss.com/
+ * - Lucide Icons: https://lucide.dev/
+ */

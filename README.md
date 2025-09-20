@@ -35,7 +35,6 @@ cd /app/frontend
 yarn install
 # O servidor roda automaticamente via supervisor na porta 3000
 ```
-
 ## 🔧 Configurações Importantes
 
 ### Variáveis de Ambiente

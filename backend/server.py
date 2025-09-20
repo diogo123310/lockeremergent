@@ -427,13 +427,13 @@ async def stripe_webhook(request: Request, stripe_signature: str = Header(None))
 @api_router.get("/admin/lockers")
 async def get_all_lockers():
     """Admin endpoint to view all lockers"""
-    lockers = await db.lockers.find().to_list(None)
+    lockers = await db.lockers.find({}, {"_id": 0}).to_list(None)
     return lockers
 
 @api_router.get("/admin/rentals")
 async def get_all_rentals():
     """Admin endpoint to view all rentals"""
-    rentals = await db.rentals.find().to_list(None)
+    rentals = await db.rentals.find({}, {"_id": 0}).to_list(None)
     return rentals
 
 # Include the router in the main app
